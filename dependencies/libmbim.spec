@@ -5,7 +5,7 @@
 %global forgeurl https://gitlab.freedesktop.org/mobile-broadband/libmbim
 
 Name:           libmbim
-Version:        1.32
+Version:        1.32.0
 Release:        1%{?dist}
 Summary:        Support library for the Mobile Broadband Interface Model (MBIM) protocol
 
