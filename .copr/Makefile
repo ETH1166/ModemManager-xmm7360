@@ -15,10 +15,13 @@ SPEC_FILE = $(notdir $(spec))
 srpm:
 	# Install required tools
 	dnf -y install rpmdevtools rpm-build wget
-	
+
 	# Setup rpm build directories
 	rpmdev-setuptree
-	
+
+	# Ensure directories exist
+	mkdir -p ~/rpmbuild/{SOURCES,SPECS,SRPMS}
+
 	# Copy the spec file to SPECS
 	cp $(spec) ~/rpmbuild/SPECS/
 	
