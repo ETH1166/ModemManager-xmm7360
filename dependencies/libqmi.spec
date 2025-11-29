@@ -5,13 +5,13 @@
 %global forgeurl https://gitlab.freedesktop.org/mobile-broadband/libqmi
 
 Name:           libqmi
-Version:        1.35.5-dev
+Version:        1.35.5
 Release:        1%{?dist}
 Summary:        Support library to use the Qualcomm MSM Interface (QMI) protocol
 
 License:        LGPL-2.1-or-later
 URL:            %{forgeurl}
-Source:         %{forgeurl}/-/archive/%{version}/%{name}-%{version}.tar.bz2
+Source:         %{forgeurl}/-/archive/%{version}-dev/%{name}-%{version}-dev.tar.bz2
 
 BuildRequires:  meson >= 0.53.0
 BuildRequires:  gcc
