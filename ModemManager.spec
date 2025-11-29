@@ -44,6 +44,7 @@ BuildRequires:  pkgconfig(qmi-glib) >= 1.35.2
 BuildRequires:  pkgconfig(mbim-glib) >= 1.29.2
 BuildRequires:  pkgconfig(qrtr-glib) >= 1.2.0
 BuildRequires:  pkgconfig(polkit-gobject-1) >= 0.97
+BuildRequires:  pkgconfig(dbus-1)
 BuildRequires:  pkgconfig(systemd)
 BuildRequires:  pkgconfig(libsystemd)
 BuildRequires:  gobject-introspection-devel
