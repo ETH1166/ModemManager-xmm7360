@@ -25,7 +25,7 @@ BuildRequires:  pkgconfig(mbim-glib) >= 1.28.0
 BuildRequires:  pkgconfig(gobject-introspection-1.0)
 BuildRequires:  gtk-doc
 BuildRequires:  help2man
-BuildRequires:  bash-completion
+BuildRequires:  pkgconfig(bash-completion)
 
 %description
 libqmi is a library for talking to WWAN devices by QMI protocol.
