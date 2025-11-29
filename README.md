@@ -43,23 +43,72 @@ sudo dnf copr enable YOUR_USERNAME/ModemManager-1.25.95
 sudo dnf upgrade ModemManager
 ```
 
-### Option 2: Build Your Own COPR
+### Option 2: Build Your Own COPR (with dependencies)
 
-1. **Fork this repository** to your GitLab/GitHub account
+Since ModemManager 1.25.95 requires newer versions of libmbim and libqmi than may be available in your Fedora release, you'll likely need to build all three packages.
 
-2. **Create a COPR project**:
-   - Go to https://copr.fedorainfracloud.org
-   - Click "New Project"
-   - Name it (e.g., `ModemManager-1.25.95`)
-   - Select target Fedora releases (e.g., Fedora 41, 42, rawhide)
+#### Step 1: Create a COPR Project
 
-3. **Add a package**:
-   - Click "Packages" → "New Package"
-   - Source Type: SCM
-   - Clone URL: Your forked repository URL
-   - Spec File: `ModemManager.spec`
-   - SRPM Build Method: make srpm
-   - Click "Save" then "Build"
+1. Go to https://copr.fedorainfracloud.org
+2. Click "New Project"
+3. Name it (e.g., `ModemManager-1.25.95`)
+4. Select target Fedora releases (e.g., Fedora 41, 42, rawhide)
+5. **Important**: Under "Build options", you may want to enable "Follow Fedora branching"
+
+#### Step 2: Add All Three Packages
+
+You need to add three packages to your COPR project. Go to **Packages → New Package** for each:
+
+**Package 1: libmbim** (build this first)
+- Package Name: `libmbim`
+- Source Type: SCM
+- Clone URL: `https://gitlab.com/YOUR_USERNAME/modemmanager-copr` (your repo)
+- Subdirectory: (leave empty)
+- Spec File: `dependencies/libmbim.spec`
+- SRPM Build Method: make srpm
+
+**Package 2: libqmi** (build after libmbim completes)
+- Package Name: `libqmi`
+- Source Type: SCM
+- Clone URL: `https://gitlab.com/YOUR_USERNAME/modemmanager-copr`
+- Subdirectory: (leave empty)
+- Spec File: `dependencies/libqmi.spec`
+- SRPM Build Method: make srpm
+
+**Package 3: ModemManager** (build after libqmi completes)
+- Package Name: `ModemManager`
+- Source Type: SCM
+- Clone URL: `https://gitlab.com/YOUR_USERNAME/modemmanager-copr`
+- Subdirectory: (leave empty)
+- Spec File: `ModemManager.spec`
+- SRPM Build Method: make srpm
+
+#### Step 3: Build in Order
+
+**Critical**: You must build the packages in dependency order!
+
+1. Click on the `libmbim` package → Click "Rebuild"
+2. **Wait for it to complete successfully**
+3. Click on the `libqmi` package → Click "Rebuild"
+4. **Wait for it to complete successfully**
+5. Click on the `ModemManager` package → Click "Rebuild"
+
+Why the order matters: Each package needs the previous one to be available in your COPR repo before it can build successfully.
+
+#### Step 4: Enable and Install
+
+Once all builds complete:
+
+```bash
+# Enable the COPR
+sudo dnf copr enable YOUR_USERNAME/ModemManager-1.25.95
+
+# Install/upgrade packages
+sudo dnf upgrade libmbim libqmi ModemManager
+
+# Restart ModemManager
+sudo systemctl restart ModemManager
+```
 
 ### Option 3: Local Build
 
@@ -70,18 +119,26 @@ sudo dnf install rpm-build rpmdevtools spectool
 # Setup RPM build tree
 rpmdev-setuptree
 
-# Copy spec file
+# Build libmbim first
+cp dependencies/libmbim.spec ~/rpmbuild/SPECS/
+cd ~/rpmbuild/SOURCES && spectool -g -R ~/rpmbuild/SPECS/libmbim.spec
+sudo dnf builddep ~/rpmbuild/SPECS/libmbim.spec
+rpmbuild -ba ~/rpmbuild/SPECS/libmbim.spec
+sudo dnf install ~/rpmbuild/RPMS/x86_64/libmbim-*.rpm
+
+# Build libqmi second
+cp dependencies/libqmi.spec ~/rpmbuild/SPECS/
+cd ~/rpmbuild/SOURCES && spectool -g -R ~/rpmbuild/SPECS/libqmi.spec
+sudo dnf builddep ~/rpmbuild/SPECS/libqmi.spec
+rpmbuild -ba ~/rpmbuild/SPECS/libqmi.spec
+sudo dnf install ~/rpmbuild/RPMS/x86_64/libqmi-*.rpm
+
+# Build ModemManager last
 cp ModemManager.spec ~/rpmbuild/SPECS/
-
-# Download sources
-cd ~/rpmbuild/SOURCES
-spectool -g -R ~/rpmbuild/SPECS/ModemManager.spec
-
-# Install build dependencies
+cd ~/rpmbuild/SOURCES && spectool -g -R ~/rpmbuild/SPECS/ModemManager.spec
 sudo dnf builddep ~/rpmbuild/SPECS/ModemManager.spec
-
-# Build
 rpmbuild -ba ~/rpmbuild/SPECS/ModemManager.spec
+sudo dnf install ~/rpmbuild/RPMS/x86_64/ModemManager-*.rpm
 ```
 
 ## Dependency Requirements
