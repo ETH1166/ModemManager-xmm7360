@@ -165,6 +165,8 @@ cp -a cli/mmcli-completion %{buildroot}%{_datadir}/bash-completion/completions/m
 %{_libdir}/ModemManager/*.so
 %{_datadir}/ModemManager/fcc-unlock.available.d/*
 %{_datadir}/ModemManager/connection.available.d/*
+%{_datadir}/ModemManager/modem-setup.available.d/*
+%{_datadir}/ModemManager/*.conf
 %dir %{_sysconfdir}/ModemManager/fcc-unlock.d
 %dir %{_sysconfdir}/ModemManager/connection.d
 %{_datadir}/icons/hicolor/*/apps/ModemManager.png
