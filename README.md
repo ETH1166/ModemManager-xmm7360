@@ -1,5 +1,11 @@
 # ModemManager 1.25.95 COPR Build
 
+The original work is from Timothy Howard: https://github.com/timothyhoward/ModemManager-L850-GL
+Original Fedora COPR repository: https://copr.fedorainfracloud.org/coprs/timhoward/ModemManager-L850-GL/
+
+This fork is for testing purposes only.
+It works flawlessly on my HP EliteBook x360 1030 G3, even with a locked SIM-card. 
+
 This repository contains the spec file and build configuration to create a Fedora COPR for ModemManager 1.25.95, which includes improved support for various modems including the Fibocom L850-GL.
 
 ## About This Version
