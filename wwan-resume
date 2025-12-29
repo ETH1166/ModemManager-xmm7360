@@ -1,0 +1,28 @@
+#!/bin/sh
+# Resume Script for HP EliteBook x360 1030 G3
+# to be installed at /usr/lib/systemd/system-sleep
+
+PCI_ADDR="0000:6d:00.0"
+MODULE="iosm"
+
+case $1/$2 in
+  pre/*)
+    systemctl stop ModemManager
+    modprobe -r $MODULE
+    ;;
+  post/*)
+    #echo "Deep WWAN reset for $MODULE at $PCI_ADDR..."
+    #systemctl stop ModemManager
+    #modprobe -r $MODULE
+    #echo 1 > /sys/bus/pci/devices/$PCI_ADDR/remove
+    #sleep 1
+    echo 1 > /sys/bus/pci/rescan
+    echo 1 > /sys/bus/pci/devices/$PCI_ADDR/reset
+    #sleep 1
+    modprobe $MODULE
+    #sleep 2
+    systemctl start ModemManager
+    #systemctl restart ModemManager
+    #nmcli radio wwan on
+    ;;
+esac
