@@ -1,0 +1,15 @@
+diff --git a/drivers/net/wwan/iosm/iosm_ipc_pcie.c b/drivers/net/wwan/iosm/iosm_ipc_pcie.c
+--- a/drivers/net/wwan/iosm/iosm_ipc_pcie.c
++++ b/drivers/net/wwan/iosm/iosm_ipc_pcie.c
+@@ -306,6 +306,12 @@ static int ipc_pcie_probe(struct pci_dev *pci,
+        /* Read WWAN RTD3 BIOS Setting
+         */
+        ipc_pcie->d3l2_support = ipc_pcie_read_bios_cfg(&pci->dev);
++       if (ipc_pcie->d3l2_support == IPC_PCIE_D3L2) {
++               dev_notice(ipc_pcie->dev, "D3 sleep already enabled");
++       } else {
++               dev_notice(ipc_pcie->dev, "forced D3 sleep.");
++               ipc_pcie->d3l2_support = IPC_PCIE_D3L2;
++       }
+ 
+        ipc_pcie->suspend = 0;
